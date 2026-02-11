@@ -1,0 +1,10 @@
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror -std=c11 -g -Iinclude
+SRC = src/main.c src/shell.c src/parser.c src/builtins.c
+OBJ = $(SRC:.c=.o)
+
+myshell: $(OBJ)
+	$(CC) $(CFLAGS) -o myshell $(OBJ)
+
+clean:
+	rm -f $(OBJ) myshell
