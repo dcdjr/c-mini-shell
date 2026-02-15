@@ -25,10 +25,16 @@ void shell_loop(void) {
 
         pid_t pid = fork();
 
+        if (pid == -1) {
+            perror("fork");
+            free_args(argv);
+            exit(1);
+        }
+
         if (pid == 0) {
             execvp(argv[0], argv);
             perror("execvp");
-            exit(1);
+            _exit(1);
         } else {
             waitpid(pid, NULL, 0);
         }
