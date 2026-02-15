@@ -1,5 +1,6 @@
 #include "shell.h"
 #include "parser.h"
+#include "builtins.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,8 +21,12 @@ void shell_loop(void) {
         }
         
         char** argv = parse_args(line);
-
         if (!argv) continue;
+
+        if (handle_builtin(argv)) {
+            free_args(argv);
+            continue;
+        }
 
         pid_t pid = fork();
 
