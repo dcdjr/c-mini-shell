@@ -1,7 +1,11 @@
 #include "shell.h"
 #include "parser.h"
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 void shell_loop(void) {
     char *line = NULL;
@@ -15,8 +19,21 @@ void shell_loop(void) {
             break;
         }
         
-        parse_args(line);
+        char** argv = parse_args(line);
 
+        if (!argv) continue;
+
+        pid_t pid = fork();
+
+        if (pid == 0) {
+            execvp(argv[0], argv);
+            perror("execvp");
+            exit(1);
+        } else {
+            waitpid(pid, NULL, 0);
+        }
+
+        free_args(argv);
     }
 
     free(line);
