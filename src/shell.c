@@ -7,10 +7,13 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <signal.h>
 
 void shell_loop(void) {
     char *line = NULL;
     size_t len = 0;
+
+    signal(SIGINT, SIG_IGN);
 
     while (1) {
         printf("%s", "myshell> ");
@@ -37,6 +40,7 @@ void shell_loop(void) {
         }
 
         if (pid == 0) {
+            signal(SIGINT, SIG_DFL);
             execvp(argv[0], argv);
             perror("execvp");
             _exit(1);
