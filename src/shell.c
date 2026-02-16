@@ -36,7 +36,7 @@ void shell_loop(void) {
         if (pid == -1) {
             perror("fork");
             free_args(argv);
-            exit(1);
+            continue;
         }
 
         if (pid == 0) {
